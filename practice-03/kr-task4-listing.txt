@@ -1,0 +1,34 @@
+function handleTaskListClick(event) {
+  if (!(event.target instanceof Element)) return;
+
+  const button = event.target.closest("button[data-action]");
+  if (!button || !elements.list.contains(button)) return;
+
+  const action = button.dataset.action;
+  if (action !== "toggle") return;
+
+  const rawId = button.closest("li[data-task-id]")?.dataset.taskId;
+  const id = Number(rawId);
+
+  if (!rawId || !Number.isSafeInteger(id) || id <= 0) {
+    elements.message.textContent = "Некорректный id задачи в карточке.";
+    return;
+  }
+
+  const task = findTaskById(currentTasks, id);
+  const result = task
+    ? setTaskCompleted(currentTasks, id, !task.completed)
+    : { ok: false, error: `Задача ${id} не найдена.` };
+
+  if (!result.ok) {
+    elements.message.textContent = result.error;
+    return;
+  }
+
+  currentTasks = result.tasks;
+  elements.message.textContent = "";
+  renderApp();
+  restoreTaskFocus(id, action);
+}
+
+elements.list.addEventListener("click", handleTaskListClick);

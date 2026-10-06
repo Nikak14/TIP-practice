@@ -1,14 +1,13 @@
 import { demoTasks, variantNumber, variantTasks } from "./data.js";
 import {
-  findTaskById, getPendingTasks, getTaskTitles, getTaskStats,
+  findTaskById, getPendingTasks, getTaskStats,
   addTask, setTaskCompleted, renameTask, removeTask,
 } from "./task-service.js";
 
 function showState(label, tasks) {
   const { total, completed, pending, progress } = getTaskStats(tasks);
   console.log(`\n${label}`);
-  console.log("ID:", tasks.map((task) => task.id));
-  console.log("Названия:", getTaskTitles(tasks));
+  console.table(tasks, ["id", "title", "completed", "priority"]);
   console.log("Невыполненные ID:", getPendingTasks(tasks).map((task) => task.id));
   console.log(`Всего: ${total}; выполнено: ${completed}; осталось: ${pending}`);
   console.log(total === 0 ? "Задач пока нет" : `Прогресс: ${progress.toFixed(1)}%`);
@@ -33,7 +32,7 @@ currentTasks = applyStep(currentTasks, "Выполнение id 4", (tasks) => s
 currentTasks = applyStep(currentTasks, "Переименование id 10", (tasks) => renameTask(tasks, 10, "Подготовить инструкцию запуска"));
 currentTasks = applyStep(currentTasks, "Удаление id 7", (tasks) => removeTask(tasks, 7));
 currentTasks = applyStep(currentTasks, "Повторный id 20", (tasks) => addTask(tasks, 20, "Дубликат"));
-console.log("Исходный demoTasks сохранился:", getTaskTitles(demoTasks), getTaskStats(demoTasks));
+showState("Исходный demoTasks сохранился", demoTasks);
 
 console.log(`\nПР2. Индивидуальный вариант ${variantNumber}`);
 showState("Исходное состояние варианта", variantTasks);
@@ -43,4 +42,4 @@ variantCurrent = applyStep(variantCurrent, "Выполнение id 11", (tasks)
 variantCurrent = applyStep(variantCurrent, "Переименование id 23", (tasks) => renameTask(tasks, 23, "Подготовить руководство пользователя"));
 variantCurrent = applyStep(variantCurrent, "Удаление id 37", (tasks) => removeTask(tasks, 37));
 variantCurrent = applyStep(variantCurrent, "Повторный id 80", (tasks) => addTask(tasks, 80, "Дубликат"));
-console.log("Исходный variantTasks сохранился:", getTaskTitles(variantTasks), getTaskStats(variantTasks));
+showState("Исходный variantTasks сохранился", variantTasks);
